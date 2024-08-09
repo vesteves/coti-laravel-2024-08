@@ -11,7 +11,9 @@ Route::get('/', function () {
 Route::prefix('/servidores')->controller(ServerController::class)->name('servers.')->group(function () {
     Route::get('/', "index")->name('index');
     Route::get('/criar', "create")->name('create');
+    Route::post('/', "store")->name('store');
     Route::get('/{id}', 'edit')->name('edit');
+    Route::put('/{id}', 'update')->name('update');
     Route::get('/deletar/{id}', 'destroy')->name('destroy');
 });
 

@@ -1,18 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+@section('title', 'Editar Servidor ' . $server["name"])
 
-<body>
-    <h1>Edição de Servidores</h1>
+@section('content')
+<h1>Edição de Servidores</h1>
 
-    <ul>
-        <li>{{ $servidor["name"] }} - {{ $servidor["max"] }}</li>
-    </ul>
-</body>
+<div class="row">
+    <div class="col col-md-6">
+        <form class="mb-4" action='{{ route("servers.update", ["id" => $server["id"]]) }}' method="POST">
+            @csrf
+            @method('PUT')
+            <label for="name" class="mb-2 form-label">Nome</label>
+            <input type="text" class="mb-2 form-control" id="name" name="name" value="{{ $server['name'] }}" />
 
-</html>
+            <label for="max" class="mb-2 form-label">Max</label>
+            <input type="number" class="mb-2 form-control" id="max" name="max" value="{{ $server['max'] }}" />
+
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </form>
+    </div>
+</div>
+
+<a class="btn btn-primary" href="{{ url()->previous() }}">Voltar</a>
+@endsection

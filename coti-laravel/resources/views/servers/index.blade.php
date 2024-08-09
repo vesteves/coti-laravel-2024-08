@@ -1,20 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+@section('title', 'Listar Servidores')
 
-<body>
-    <h1>Listagem de Servidores</h1>
+@section('content')
 
-    <ul>
-        @foreach ($servidores as $servidor)
-        <li>{{ $servidor["name"] }} - {{ $servidor["max"] }}</li>
+<h1>Listagem de Servidores</h1>
+
+<a class="btn btn-primary" href='{{ route("servers.create") }}'>Criar Servidor</a>
+
+<table class="table">
+    <thead>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Max</th>
+        <th colspan="2" class="text-center">Ações</th>
+    </thead>
+    <tbody>
+        @foreach($servers as $server)
+        <tr>
+            <td>{{ $server["id"] }}</td>
+            <td>{{ $server["name"] }}</td>
+            <td>{{ $server["max"] }}</td>
+            <td><a href="{{ route('servers.edit', ['id' => $server['id']]) }}">Editar</a></td>
+            <td><a href="{{ route('servers.destroy', ['id' => $server['id']]) }}">Remover</a></td>
+        </tr>
         @endforeach
-    </ul>
-</body>
-
-</html>
+    </tbody>
+</table>
+@endsection
