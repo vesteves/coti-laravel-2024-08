@@ -12,16 +12,18 @@ Route::prefix('/servidores')->controller(ServerController::class)->name('servers
     Route::get('/', "index")->name('index');
     Route::get('/criar', "create")->name('create');
     Route::post('/', "store")->name('store');
-    Route::get('/{id}', 'edit')->name('edit');
-    Route::put('/{id}', 'update')->name('update');
-    Route::get('/deletar/{id}', 'destroy')->name('destroy');
+    Route::get('/{server}', 'edit')->name('edit');
+    Route::put('/{server}', 'update')->name('update');
+    Route::delete('/{server}', 'destroy')->name('destroy');
 });
 
 Route::prefix('/jogos')->controller(GamesController::class)->name('games.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/criar', 'create')->name('create');
-    Route::get('/{id}', 'edit')->name('edit');
-    Route::get('/deletar/{id}', 'destroy')->name('destroy');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{game}', 'edit')->name('edit');
+    Route::put('/{game}', 'update')->name('update');
+    Route::delete('/{game}', 'destroy')->name('destroy');
 });
 
 // MODEL -> VIEW -> CONTROLLER

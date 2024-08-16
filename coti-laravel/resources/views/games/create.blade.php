@@ -1,16 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+@section('title', 'Criar Jogos')
 
-<body>
-    <h1>Criar Jogo</h1>
+@section('content')
+<h1>Criação de Jogos</h1>
 
-    <a href="{{ url()->previous() }}">Voltar</a>
-</body>
+@if ($errors->any())
+<ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+</ul>
+@endif
 
-</html>
+<div class="row">
+    <div class="col col-md-6">
+        <form class="mb-4" action="{{ route('games.store') }}" method="POST">
+            @csrf
+            <label for="name" class="mb-2 form-label">Nome</label>
+            <input type="text" class="mb-2 form-control" id="name" name="name" />
+
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </form>
+    </div>
+</div>
+
+<a class="btn btn-primary" href="{{ url()->previous() }}">Voltar</a>
+@endsection

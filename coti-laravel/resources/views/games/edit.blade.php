@@ -1,16 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+@section('title', 'Editar Jogo ' . $game["name"])
 
-<body>
-    <h1>Editar Jogo {{ $game["name"] }}</h1>
+@section('content')
+<h1>Edição de Jogos</h1>
 
-    <a href="{{ url()->previous() }}">Voltar</a>
-</body>
+<div class="row">
+    <div class="col col-md-6">
+        <form class="mb-4" action='{{ route("games.update", ["game" => $game["id"]]) }}' method="POST">
+            @csrf
+            @method('PUT')
+            <label for="name" class="mb-2 form-label">Nome</label>
+            <input type="text" class="mb-2 form-control" id="name" name="name" value="{{ $game['name'] }}" />
 
-</html>
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </form>
+    </div>
+</div>
+
+<a class="btn btn-primary" href="{{ url()->previous() }}">Voltar</a>
+@endsection

@@ -1,43 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        td,
-        th {
-            border: 1px solid #333;
-            text-align: center;
-        }
+@section('title', 'Listar Jogos')
 
-        table {
-            width: 100%;
-        }
-    </style>
-</head>
+@section('content')
 
-<body>
-    <h1>Listar Jogos</h1>
-    <a href='{{ route("games.create") }}'>Criar Jogo</a>
-    <table>
-        <thead>
-            <th>ID</th>
-            <th>Nome</th>
-            <th colspan="2">Ações</th>
-        </thead>
-        <tbody>
-            @foreach($games as $game)
-            <tr>
-                <td>{{ $game["id"] }}</td>
-                <td>{{ $game["name"] }}</td>
-                <td><a href="{{ route('games.edit', ['id' => $game['id']]) }}">Editar</a></td>
-                <td><a href="{{ route('games.destroy', ['id' => $game['id']]) }}">Remover</a></td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</body>
+<h1>Listagem de Jogos</h1>
 
-</html>
+<a class="btn btn-primary" href='{{ route("games.create") }}'>Criar Jogo</a>
+
+<table class="table">
+    <thead>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Max</th>
+        <th colspan="2" class="text-center">Ações</th>
+    </thead>
+    <tbody>
+        @foreach($games as $game)
+        <tr>
+            <td>{{ $game["id"] }}</td>
+            <td>{{ $game["name"] }}</td>
+            <td>{{ $game["max"] }}</td>
+            <td class="text-center">
+                <a href="{{ route('games.edit', ['game' => $game['id']]) }}" class="btn btn-primary">
+                    <span class="material-symbols-outlined">edit</span>
+                </a>
+            </td>
+            <td class="text-center">
+                <form action="{{ route('games.destroy', ['game' => $game['id']]) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+@endsection

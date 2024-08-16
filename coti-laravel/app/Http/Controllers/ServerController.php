@@ -2,102 +2,95 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
+use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\StoreServerRequest;
 
 class ServerController extends Controller
 {
-    private $servers = [
-        [
-            "id" => 1,
-            "name" => "Server 1",
-            "max" => 100
-        ],
-        [
-            "id" => 2,
-            "name" => "Server 2",
-            "max" => 150
-        ],
-        [
-            "id" => 3,
-            "name" => "Server 3",
-            "max" => 200
-        ],
-    ];
-
     public function index()
     {
-        return view('servers.index', ["servers" => $this->servers]);
+        $servers = Server::with(['game'])->get();
+
+        return view('servers.index', ["servers" => $servers])
+            ->with('message', session('message'))
+            ->with('messageType', session('messageType'));
     }
 
     public function create()
     {
-        return view('servers.create');
-    }
+        $games = Game::all();
 
-    public function store(Request $request)
-    {
-        // return view('servers.index', ["servers" => $this->servers])
-        //     ->with('messageType', 'danger')
-        //     ->with('message', 'Falha ao criar servidor.');
-
-        array_push($this->servers, [
-            "id" => count($this->servers) + 1,
-            "name" => $request->name,
-            "max" => $request->max
+        return view('servers.create', [
+            "games" => $games
         ]);
-
-        // return Redirect::route('servers.index');
-        return view('servers.index', ["servers" => $this->servers])
-            ->with('messageType', 'success')
-            ->with('message', 'Servidor criado!');
     }
 
-    public function edit(Request $request)
+    public function store(StoreServerRequest $request)
     {
-        // Dump and Die
-        // dd($request->id);
+        try {
+            Server::create([
+                "name" => $request->name,
+                "max" => $request->max,
+                "game_id" => $request->game_id,
+            ]);
 
-        $server = null;
-
-        foreach ($this->servers as $serverRaw) {
-            if ($serverRaw["id"] == $request->id) {
-                $server = $serverRaw;
-            }
+            return Redirect::route('servers.index')
+                ->with('messageType', 'success')
+                ->with('message', 'Servidor criado!');
+        } catch (\Throwable $th) {
+            report($th);
+            return Redirect::route('servers.index')
+                ->with('messageType', 'danger')
+                ->with('message', $th->getMessage());
         }
-
-        return view('servers.edit', ["server" => $server]);
     }
 
-    public function update(Request $request)
+    public function edit(Server $server)
     {
-        // return view('servers.index', ["servers" => $this->servers])
-        //     ->with('messageType', 'danger')
-        //     ->with('message', 'Falha ao atualizar servidor.');
+        $games = Game::all();
 
-        foreach ($this->servers as $index => $server) {
-            if ($server["id"] == $request->id) {
-                $this->servers[$index]["name"] = $request->name;
-                $this->servers[$index]["max"] = $request->max;
-            }
-        };
-
-        // return Redirect::route('servers.index');
-        return view('servers.index', ["servers" => $this->servers])
-            ->with('messageType', 'success')
-            ->with('message', 'Servidor atualizado!');
+        return view('servers.edit', [
+            "server" => $server,
+            "games" => $games
+        ]);
     }
 
-    public function destroy(Request $request)
+    public function update(Server $server, Request $request)
     {
-        $server = null;
+        try {
+            $server->name = $request->name;
+            $server->max = $request->max;
+            $server->game_id = $request->game_id;
 
-        foreach ($this->servers as $serverRaw) {
-            if ($serverRaw["id"] == $request->id) {
-                $server = $serverRaw;
-            }
+            $server->save();
+
+            return Redirect::route('servers.index')
+                ->with('messageType', 'success')
+                ->with('message', 'Servidor atualizado!');
+        } catch (\Throwable $th) {
+            report($th);
+            return Redirect::route('servers.index')
+                ->with('messageType', 'danger')
+                ->with('message', $th->getMessage());
         }
+    }
 
-        return "Pronto para deletar o servidor " . $server["name"];
+    public function destroy(Server $server)
+    {
+        try {
+            $server->delete();
+
+            return Redirect::route('servers.index')
+                ->with('messageType', 'success')
+                ->with('message', 'Servidor removido!');
+        } catch (\Throwable $th) {
+            report($th);
+            return Redirect::route('servers.index')
+                ->with('messageType', 'danger')
+                ->with('message', $th->getMessage());
+        }
     }
 }

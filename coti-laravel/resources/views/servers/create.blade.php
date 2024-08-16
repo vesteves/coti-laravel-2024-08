@@ -11,9 +11,23 @@
       @csrf
       <label for="name" class="mb-2 form-label">Nome</label>
       <input type="text" class="mb-2 form-control" id="name" name="name" />
+      @error('name')
+      <div class="alert alert-danger">{{ $message }}</div>
+      @enderror
 
       <label for="max" class="mb-2 form-label">Max</label>
       <input type="number" class="mb-2 form-control" id="max" name="max" />
+      @error('max')
+      <div class="alert alert-danger">{{ $message }}</div>
+      @enderror
+
+      <label for="game_id" class="mb-2 form-label">Jogo</label>
+
+      <select name="game_id" class="mb-2 form-select">
+        @foreach($games as $game)
+        <option value="{{ $game->id }}">{{ $game->name }}</option>
+        @endforeach
+      </select>
 
       <button class="btn btn-primary" type="submit">Salvar</button>
     </form>
