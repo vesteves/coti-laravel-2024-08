@@ -6,7 +6,9 @@
 
 <h1>Listagem de Servidores</h1>
 
+@auth
 <a class="btn btn-primary" href='{{ route("servers.create") }}'>Criar Servidor</a>
+@endauth
 
 <table class="table">
     <thead>
@@ -14,7 +16,7 @@
         <th>Nome</th>
         <th>Max</th>
         <th>Jogo</th>
-        <th colspan="2" class="text-center">Ações</th>
+        <th colspan="{{ Auth::check() ? '3' : '1' }}" class="text-center">Ações</th>
     </thead>
     <tbody>
         @foreach($servers as $server)
@@ -23,6 +25,7 @@
             <td>{{ $server["name"] }}</td>
             <td>{{ $server["max"] }}</td>
             <td>{{ $server->game->name }}</td>
+            @auth
             <td class="text-center">
                 <a href="{{ route('servers.edit', ['server' => $server['id']]) }}" class="btn btn-primary">
                     <span class="material-symbols-outlined">edit</span>
@@ -36,6 +39,12 @@
                         <span class="material-symbols-outlined">delete</span>
                     </button>
                 </form>
+            </td>
+            @endauth
+            <td class="text-center">
+                <a href="{{ route('servers.edit', ['server' => $server['id']]) }}" class="btn btn-primary">
+                    Acessar
+                </a>
             </td>
         </tr>
         @endforeach

@@ -33,6 +33,29 @@
                     </li>
                 </ul>
             </div>
+            <ul class="navbar-nav">
+                @auth
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ Auth::user()->name }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="nav-link" type="submit">Sair</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                @endauth
+
+                @guest
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('login') }}">Login</a>
+                </li>
+                @endguest
+            </ul>
         </div>
     </nav>
 
