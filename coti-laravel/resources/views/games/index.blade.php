@@ -12,7 +12,6 @@
     <thead>
         <th>ID</th>
         <th>Nome</th>
-        <th>Max</th>
         <th colspan="2" class="text-center">Ações</th>
     </thead>
     <tbody>
@@ -20,7 +19,6 @@
         <tr>
             <td>{{ $game["id"] }}</td>
             <td>{{ $game["name"] }}</td>
-            <td>{{ $game["max"] }}</td>
             <td class="text-center">
                 <a href="{{ route('games.edit', ['game' => $game['id']]) }}" class="btn btn-primary">
                     <span class="material-symbols-outlined">edit</span>
@@ -39,4 +37,12 @@
         @endforeach
     </tbody>
 </table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        @for ($page = 1; $page <= $games->lastPage(); $page++)
+            <li class="page-item"><a class="page-link" href='{{ route("games.index", ["page" => $page]) }}'>{{ $page }}</a></li>
+            @endfor
+    </ul>
+</nav>
+<a class="btn btn-primary" href='{{ route("games.export") }}'>Exportar lista</a>
 @endsection

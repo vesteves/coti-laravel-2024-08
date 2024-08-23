@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\GamesExport;
 
 class GamesController extends Controller
 {
     public function index()
     {
-        $games = Game::all();
+        $games = Game::paginate(2);
 
         return view('games.index', ["games" => $games])
             ->with('message', session('message'))
@@ -24,9 +27,12 @@ class GamesController extends Controller
 
     public function store(Request $request)
     {
+        $avatar = $request->avatar->store('public');
+
         try {
             Game::create([
-                "name" => $request->name
+                "name" => $request->name,
+                "avatar" => $avatar
             ]);
 
             return Redirect::route('games.index')
@@ -47,8 +53,18 @@ class GamesController extends Controller
 
     public function update(Game $game, Request $request)
     {
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->avatar->store('public');
+            // no geral, criamos um cronjob que remova as imagens que não
+            // estão ligadas à nenhum registro
+            Storage::delete($game->avatar);
+        } else {
+            $avatar = $game->avatar;
+        }
+
         try {
             $game->name = $request->name;
+            $game->avatar = $avatar;
             $game->save();
 
             return Redirect::route('games.index')
@@ -76,5 +92,10 @@ class GamesController extends Controller
                 ->with('messageType', 'danger')
                 ->with('message', $th->getMessage());
         }
+    }
+
+    public function export()
+    {
+        return Excel::download(new GamesExport, 'games.xlsx');
     }
 }

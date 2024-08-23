@@ -3,6 +3,7 @@
 use App\Http\Controllers\GamesController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PhotoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,6 +23,7 @@ Route::prefix('/jogos')->middleware('auth')->controller(GamesController::class)-
     Route::get('/', 'index')->name('index');
     Route::get('/criar', 'create')->name('create');
     Route::post('/', 'store')->name('store');
+    Route::get('/export', 'export')->name('export');
     Route::get('/{game}', 'edit')->name('edit');
     Route::put('/{game}', 'update')->name('update');
     Route::delete('/{game}', 'destroy')->name('destroy');

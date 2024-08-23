@@ -15,10 +15,13 @@
 
 <div class="row">
     <div class="col col-md-6">
-        <form class="mb-4" action="{{ route('games.store') }}" method="POST">
+        <form class="mb-4" action="{{ route('games.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <label for="name" class="mb-2 form-label">Nome</label>
             <input type="text" class="mb-2 form-control" id="name" name="name" />
+
+            <label for="avatar" class="mb-2 form-label">Avatar</label>
+            <input type="file" class="mb-2 form-control" id="avatar" name="avatar" />
 
             <button class="btn btn-primary" type="submit">Salvar</button>
         </form>

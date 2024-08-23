@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Game extends Model
 {
@@ -12,11 +14,7 @@ class Game extends Model
     protected $table = "games";
 
     protected $fillable = [
-        "name"
+        "name",
+        "avatar"
     ];
-
-    public function servers()
-    {
-        return $this->hasMany(Server::class);
-    }
 }
